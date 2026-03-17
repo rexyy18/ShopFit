@@ -126,7 +126,7 @@ const LoginPage = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                placeholder="John Doe"
+                placeholder="username"
                 style={{
                   width: "100%",
                   padding: "12px 15px",
@@ -159,7 +159,7 @@ const LoginPage = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              placeholder="john@example.com"
+              placeholder="kofi@gmail.com"
               style={{
                 width: "100%",
                 padding: "12px 15px",
@@ -191,7 +191,7 @@ const LoginPage = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              placeholder="••••••••"
+              placeholder="password"
               style={{
                 width: "100%",
                 padding: "12px 15px",
