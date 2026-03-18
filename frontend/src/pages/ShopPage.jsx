@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import ProductCard from "../components/product/ProductCard";
 
 const ShopPage = () => {
@@ -14,9 +14,7 @@ const ShopPage = () => {
   const searchParams = new URLSearchParams(location.search);
   const keyword = searchParams.get("q");
 
-  // Get page title and filter from URL
   const getPageInfo = () => {
-    
     const path = location.pathname;
     if (path === "/men") return { title: "MEN", category: "men" };
     if (path === "/ladies") return { title: "LADIES", category: "ladies" };
@@ -32,7 +30,7 @@ const ShopPage = () => {
       setLoading(true);
       try {
         const url = keyword ? `/api/products/search?q=${keyword}` : "/api/products";
-        const { data } = await axios.get(url);
+        const { data } = await API.get(url);
         setProducts(data);
         setLoading(false);
       } catch (err) {
@@ -43,30 +41,23 @@ const ShopPage = () => {
     fetchProducts();
   }, [keyword]);
 
-  // Derive filtered products from current state
   const filtered = (() => {
     let result = [...products];
 
-    // Filter by category based on current shop page
     if (category !== "all") {
       result = result.filter((p) => p.category === category);
     }
 
-    // Filter by size
     if (selectedSizes.length > 0) {
       result = result.filter((p) =>
-        p.sizes.some((s) => selectedSizes.includes(s)),
+        p.sizes.some((s) => selectedSizes.includes(s))
       );
     }
 
-    // Filter by price
     result = result.filter((p) => p.price <= priceRange);
 
-    // Sort
     if (sortBy === "newest") {
-      result = result.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
-      );
+      result = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (sortBy === "price-low") {
       result = result.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-high") {
@@ -78,7 +69,7 @@ const ShopPage = () => {
 
   const toggleSize = (size) => {
     setSelectedSizes((prev) =>
-      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
+      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
     );
   };
 
@@ -92,96 +83,75 @@ const ShopPage = () => {
 
   return (
     <div>
-      {/* Hero Banner - Only show if not searching */}
       {!keyword && (
-        <div
-          style={{
-            backgroundColor: "#1a1a1a",
-            padding: "50px 40px",
-            textAlign: "center",
-            color: "#fff",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "36px",
-              fontWeight: "900",
-              letterSpacing: "4px",
-              marginBottom: "10px",
-            }}
-          >
+        <div style={{
+          backgroundColor: "#1a1a1a",
+          padding: "50px 40px",
+          textAlign: "center",
+          color: "#fff",
+        }}>
+          <h1 style={{
+            fontSize: "36px",
+            fontWeight: "900",
+            letterSpacing: "4px",
+            marginBottom: "10px",
+          }}>
             {title}
           </h1>
         </div>
       )}
 
-      <div
-        className="page-container responsive-flex"
-        style={{
-          maxWidth: "1200px",
-          margin: "50px auto",
-          padding: "0 40px",
-          display: "grid",
-          gridTemplateColumns: "250px 1fr",
-          gap: "40px",
-          alignItems: "start",
-        }}
-      >
+      <div className="page-container responsive-flex" style={{
+        maxWidth: "1200px",
+        margin: "50px auto",
+        padding: "0 40px",
+        display: "grid",
+        gridTemplateColumns: "250px 1fr",
+        gap: "40px",
+        alignItems: "start",
+      }}>
 
         {/* Left - Filters Sidebar */}
         <div style={{ position: "sticky", top: "100px" }}>
-
-          {/* Filter Header */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "25px",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "14px",
-                fontWeight: "800",
-                letterSpacing: "2px",
-                color: "#222",
-              }}
-            >
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "25px",
+          }}>
+            <h2 style={{
+              fontSize: "14px",
+              fontWeight: "800",
+              letterSpacing: "2px",
+              color: "#222",
+            }}>
               FILTERS
             </h2>
-            <button
-              onClick={clearFilters}
-              style={{
-                fontSize: "11px",
-                color: "#c8a96e",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontWeight: "600",
-              }}
-            >
+            <button onClick={clearFilters} style={{
+              fontSize: "11px",
+              color: "#c8a96e",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontWeight: "600",
+            }}>
               CLEAR ALL
             </button>
           </div>
 
           {/* Price Range */}
-          <div
-            style={{
-              marginBottom: "30px",
-              paddingBottom: "30px",
-              borderBottom: "1px solid #eee",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "12px",
-                fontWeight: "700",
-                letterSpacing: "1px",
-                color: "#222",
-                marginBottom: "15px",
-              }}
-            >
+          <div style={{
+            marginBottom: "30px",
+            paddingBottom: "30px",
+            borderBottom: "1px solid #eee",
+          }}>
+            <h3 style={{
+              fontSize: "12px",
+              fontWeight: "700",
+              letterSpacing: "1px",
+              color: "#222",
+              marginBottom: "15px",
+            }}>
               PRICE RANGE
             </h3>
             <input
@@ -192,44 +162,34 @@ const ShopPage = () => {
               onChange={(e) => setPriceRange(Number(e.target.value))}
               style={{ width: "100%", accentColor: "#222" }}
             />
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: "12px",
-                color: "#666",
-                marginTop: "8px",
-              }}
-            >
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "12px",
+              color: "#666",
+              marginTop: "8px",
+            }}>
               <span>$0</span>
-              <span style={{ fontWeight: "700", color: "#222" }}>
-                ${priceRange}
-              </span>
+              <span style={{ fontWeight: "700", color: "#222" }}>${priceRange}</span>
             </div>
           </div>
 
           {/* Size Filter */}
-          <div
-            style={{
-              marginBottom: "30px",
-              paddingBottom: "30px",
-              borderBottom: "1px solid #eee",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "12px",
-                fontWeight: "700",
-                letterSpacing: "1px",
-                color: "#222",
-                marginBottom: "15px",
-              }}
-            >
+          <div style={{
+            marginBottom: "30px",
+            paddingBottom: "30px",
+            borderBottom: "1px solid #eee",
+          }}>
+            <h3 style={{
+              fontSize: "12px",
+              fontWeight: "700",
+              letterSpacing: "1px",
+              color: "#222",
+              marginBottom: "15px",
+            }}>
               SIZE
             </h3>
-            <div
-              style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}
-            >
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
               {allSizes.map((size) => (
                 <button
                   key={size}
@@ -237,12 +197,8 @@ const ShopPage = () => {
                   style={{
                     width: "40px",
                     height: "40px",
-                    border: selectedSizes.includes(size)
-                      ? "2px solid #222"
-                      : "1px solid #ddd",
-                    backgroundColor: selectedSizes.includes(size)
-                      ? "#222"
-                      : "#fff",
+                    border: selectedSizes.includes(size) ? "2px solid #222" : "1px solid #ddd",
+                    backgroundColor: selectedSizes.includes(size) ? "#222" : "#fff",
                     color: selectedSizes.includes(size) ? "#fff" : "#444",
                     fontSize: "11px",
                     fontWeight: "600",
@@ -257,13 +213,11 @@ const ShopPage = () => {
           </div>
 
           {/* Results Count */}
-          <div
-            style={{
-              padding: "15px",
-              backgroundColor: "#f9f9f9",
-              textAlign: "center",
-            }}
-          >
+          <div style={{
+            padding: "15px",
+            backgroundColor: "#f9f9f9",
+            textAlign: "center",
+          }}>
             <p style={{ fontSize: "13px", color: "#666" }}>
               Showing <strong>{filtered.length}</strong> products
             </p>
@@ -272,32 +226,19 @@ const ShopPage = () => {
 
         {/* Right - Products */}
         <div>
-
-          {/* Sort Bar */}
-          <div
-            className="responsive-flex"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "25px",
-              paddingBottom: "15px",
-              borderBottom: "1px solid #eee",
-            }}
-          >
+          <div className="responsive-flex" style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "25px",
+            paddingBottom: "15px",
+            borderBottom: "1px solid #eee",
+          }}>
             <p style={{ fontSize: "13px", color: "#999" }}>
               {filtered.length} Products Found
             </p>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: "10px" }}
-            >
-              <span
-                style={{
-                  fontSize: "12px",
-                  color: "#666",
-                  fontWeight: "600",
-                }}
-              >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span style={{ fontSize: "12px", color: "#666", fontWeight: "600" }}>
                 SORT BY:
               </span>
               <select
@@ -319,28 +260,16 @@ const ShopPage = () => {
             </div>
           </div>
 
-          {/* Loading */}
           {loading && (
-            <div
-              style={{ textAlign: "center", padding: "60px", color: "#999" }}
-            >
+            <div style={{ textAlign: "center", padding: "60px", color: "#999" }}>
               Loading products...
             </div>
           )}
 
-          {/* Empty */}
           {!loading && filtered.length === 0 && (
-            <div
-              style={{ textAlign: "center", padding: "60px", color: "#999" }}
-            >
+            <div style={{ textAlign: "center", padding: "60px", color: "#999" }}>
               <div style={{ fontSize: "40px", marginBottom: "15px" }}>🔍</div>
-              <p
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  marginBottom: "10px",
-                }}
-              >
+              <p style={{ fontSize: "16px", fontWeight: "600", marginBottom: "10px" }}>
                 No products found
               </p>
               <p style={{ fontSize: "13px" }}>Try adjusting your filters</p>
@@ -363,7 +292,6 @@ const ShopPage = () => {
             </div>
           )}
 
-          {/* Products Grid */}
           {!loading && filtered.length > 0 && (
             <div className="product-grid">
               {filtered.map((product) => (

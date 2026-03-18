@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../../api";
 import ProductCard from "./ProductCard";
 
 const tabs = ["ALL", "SPECIAL", "BEST SELLER", "FEATURED"];
@@ -12,7 +12,7 @@ const ProductGrid = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get("/api/products");
+        const { data } = await API.get("/api/products");
         setProducts(data);
         setLoading(false);
       } catch (error) {
@@ -25,30 +25,24 @@ const ProductGrid = () => {
 
   const filteredProducts = () => {
     if (activeTab === "ALL") return products;
-    if (activeTab === "SPECIAL")
-      return products.filter((p) => p.tag === "special");
-    if (activeTab === "BEST SELLER")
-      return products.filter((p) => p.tag === "bestseller");
-    if (activeTab === "FEATURED")
-      return products.filter((p) => p.tag === "featured");
+    if (activeTab === "SPECIAL") return products.filter((p) => p.tag === "special");
+    if (activeTab === "BEST SELLER") return products.filter((p) => p.tag === "bestseller");
+    if (activeTab === "FEATURED") return products.filter((p) => p.tag === "featured");
     return products;
   };
 
   return (
     <div className="page-container" style={{ padding: "60px 40px" }}>
-      {/* Tabs */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "40px",
-          marginBottom: "40px",
-          borderBottom: "1px solid #eee",
-          paddingBottom: "15px",
-          overflowX: "auto",
-          whiteSpace: "nowrap"
-        }}
-      >
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        gap: "40px",
+        marginBottom: "40px",
+        borderBottom: "1px solid #eee",
+        paddingBottom: "15px",
+        overflowX: "auto",
+        whiteSpace: "nowrap"
+      }}>
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -71,21 +65,18 @@ const ProductGrid = () => {
         ))}
       </div>
 
-      {/* Loading */}
       {loading && (
         <div style={{ textAlign: "center", padding: "40px", color: "#999" }}>
           Loading products...
         </div>
       )}
 
-      {/* Empty */}
       {!loading && filteredProducts().length === 0 && (
         <div style={{ textAlign: "center", padding: "40px", color: "#999" }}>
           No products in this category yet.
         </div>
       )}
 
-      {/* Product Grid */}
       {!loading && filteredProducts().length > 0 && (
         <div className="product-grid">
           {filteredProducts().map((product) => (
