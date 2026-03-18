@@ -278,7 +278,7 @@ const ContactPage = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  placeholder="John Doe"
+                  placeholder="yourname"
                   style={{
                     width: "100%",
                     padding: "12px 15px",
@@ -311,7 +311,7 @@ const ContactPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  placeholder="john@example.com"
+                  placeholder="yourname@example.com"
                   style={{
                     width: "100%",
                     padding: "12px 15px",
