@@ -43,27 +43,12 @@ const ShopPage = () => {
 
   const filtered = (() => {
     let result = [...products];
-
-    if (category !== "all") {
-      result = result.filter((p) => p.category === category);
-    }
-
-    if (selectedSizes.length > 0) {
-      result = result.filter((p) =>
-        p.sizes.some((s) => selectedSizes.includes(s))
-      );
-    }
-
+    if (category !== "all") result = result.filter((p) => p.category === category);
+    if (selectedSizes.length > 0) result = result.filter((p) => p.sizes.some((s) => selectedSizes.includes(s)));
     result = result.filter((p) => p.price <= priceRange);
-
-    if (sortBy === "newest") {
-      result = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    } else if (sortBy === "price-low") {
-      result = result.sort((a, b) => a.price - b.price);
-    } else if (sortBy === "price-high") {
-      result = result.sort((a, b) => b.price - a.price);
-    }
-
+    if (sortBy === "newest") result = result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    else if (sortBy === "price-low") result = result.sort((a, b) => a.price - b.price);
+    else if (sortBy === "price-high") result = result.sort((a, b) => b.price - a.price);
     return result;
   })();
 
@@ -101,7 +86,8 @@ const ShopPage = () => {
         </div>
       )}
 
-      <div className="page-container responsive-flex" style={{
+      {/* Main Layout - shop-layout class handles mobile stacking */}
+      <div className="shop-layout page-container" style={{
         maxWidth: "1200px",
         margin: "50px auto",
         padding: "0 40px",
@@ -112,7 +98,7 @@ const ShopPage = () => {
       }}>
 
         {/* Left - Filters Sidebar */}
-        <div style={{ position: "sticky", top: "100px" }}>
+        <div className="filter-sidebar" style={{ position: "sticky", top: "100px" }}>
           <div style={{
             display: "flex",
             justifyContent: "space-between",

@@ -53,8 +53,8 @@ const ProductPage = () => {
     );
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "60px auto", padding: "0 40px" }}>
-      <div style={{
+    <div className="page-container" style={{ maxWidth: "1100px", margin: "60px auto", padding: "0 40px" }}>
+      <div className="product-detail-grid" style={{
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
         gap: "60px",
@@ -117,7 +117,7 @@ const ProductPage = () => {
             }}>
               SIZE: <span style={{ color: "#c8a96e" }}>{selectedSize}</span>
             </p>
-            <div style={{ display: "flex", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
               {product.sizes.map((size) => (
                 <button
                   key={size}
@@ -151,7 +151,7 @@ const ProductPage = () => {
             }}>
               COLOR: <span style={{ color: "#c8a96e", textTransform: "capitalize" }}>{selectedColor}</span>
             </p>
-            <div style={{ display: "flex", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
               {product.colors.map((color) => (
                 <button
                   key={color}
@@ -182,7 +182,7 @@ const ProductPage = () => {
             }}>
               QUANTITY
             </p>
-            <div style={{ display: "flex", alignItems: "center", gap: "0" }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
               <button
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 style={{
