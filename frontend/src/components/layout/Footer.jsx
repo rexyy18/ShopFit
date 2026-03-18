@@ -25,17 +25,17 @@ const Footer = () => {
       >
         {[
           {
-            icon: "🚚",
+            icon: "",
             title: "FREE INTERNATIONAL DELIVERY",
             desc: "On all orders over $150.00",
           },
           {
-            icon: "💸",
+            icon: "",
             title: "50% OFF DRESSES",
             desc: "Applies only to selected items marked down on site",
           },
           {
-            icon: "🎁",
+            icon: "",
             title: "BUY ONE GET ONE FREE",
             desc: "On almost everything",
           },
