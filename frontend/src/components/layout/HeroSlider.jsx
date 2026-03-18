@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const slides = [
   {
@@ -9,8 +9,7 @@ const slides = [
     buttonText: "VIEW COLLECTION",
     bg: "#1a1a1a",
     textColor: "#fff",
-    image:
-      "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80",
   },
   {
     id: 2,
@@ -20,8 +19,7 @@ const slides = [
     buttonText: "SHOP NOW",
     bg: "#2c2c2c",
     textColor: "#fff",
-    image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=80",
   },
   {
     id: 3,
@@ -31,49 +29,53 @@ const slides = [
     buttonText: "DISCOVER MORE",
     bg: "#3a3a3a",
     textColor: "#fff",
-    image:
-      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&q=80",
   },
 ];
 
 const HeroSlider = () => {
   const [current, setCurrent] = useState(0);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  const prevSlide = () => {
-    setCurrent(current === 0 ? slides.length - 1 : current - 1);
-  };
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  const nextSlide = () => {
-    setCurrent(current === slides.length - 1 ? 0 : current + 1);
-  };
+  const prevSlide = () => setCurrent(current === 0 ? slides.length - 1 : current - 1);
+  const nextSlide = () => setCurrent(current === slides.length - 1 ? 0 : current + 1);
 
   const slide = slides[current];
 
   return (
-    <div
-      style={{
-        backgroundColor: slide.bg,
-        height: "520px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 80px",
-        position: "relative",
-        overflow: "hidden",
-        transition: "background-color 0.5s ease",
-      }}
-    >
+    <div style={{
+      backgroundColor: slide.bg,
+      height: isMobile ? "auto" : "520px",
+      minHeight: isMobile ? "480px" : "520px",
+      display: "flex",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: "center",
+      justifyContent: isMobile ? "center" : "space-between",
+      padding: isMobile ? "60px 30px 50px" : "0 80px",
+      position: "relative",
+      overflow: "hidden",
+      transition: "background-color 0.5s ease",
+    }}>
+
       {/* Left Arrow */}
       <button
         onClick={prevSlide}
         style={{
           position: "absolute",
-          left: "20px",
+          left: "15px",
+          top: "50%",
+          transform: "translateY(-50%)",
           background: "rgba(255,255,255,0.2)",
           color: "#fff",
           border: "none",
-          width: "45px",
-          height: "45px",
+          width: "40px",
+          height: "40px",
           borderRadius: "50%",
           fontSize: "20px",
           cursor: "pointer",
@@ -87,28 +89,30 @@ const HeroSlider = () => {
       </button>
 
       {/* Text Content */}
-      <div style={{ color: slide.textColor, zIndex: 2 }}>
-        <h1
-          style={{
-            fontSize: "64px",
-            fontWeight: "900",
-            lineHeight: "1.1",
-            letterSpacing: "2px",
-            textTransform: "uppercase",
-          }}
-        >
+      <div style={{
+        color: slide.textColor,
+        zIndex: 2,
+        textAlign: isMobile ? "center" : "left",
+        order: isMobile ? 2 : 1,
+        marginTop: isMobile ? "20px" : "0",
+      }}>
+        <h1 style={{
+          fontSize: isMobile ? "38px" : "64px",
+          fontWeight: "900",
+          lineHeight: "1.1",
+          letterSpacing: "2px",
+          textTransform: "uppercase",
+        }}>
           {slide.title}
           <br />
           {slide.subtitle}
         </h1>
-        <p
-          style={{
-            fontSize: "13px",
-            letterSpacing: "3px",
-            margin: "15px 0 30px",
-            color: "#ccc",
-          }}
-        >
+        <p style={{
+          fontSize: "13px",
+          letterSpacing: "3px",
+          margin: "15px 0 30px",
+          color: "#ccc",
+        }}>
           {slide.description}
         </p>
         <button
@@ -137,21 +141,23 @@ const HeroSlider = () => {
       </div>
 
       {/* Model Image */}
-      <div
-        style={{
-          height: "100%",
-          display: "flex",
-          alignItems: "flex-end",
-          zIndex: 2,
-        }}
-      >
+      <div style={{
+        height: isMobile ? "250px" : "100%",
+        display: "flex",
+        alignItems: isMobile ? "center" : "flex-end",
+        justifyContent: "center",
+        zIndex: 2,
+        order: isMobile ? 1 : 2,
+      }}>
         <img
           src={slide.image}
           alt="model"
           style={{
-            height: "500px",
+            height: isMobile ? "250px" : "500px",
+            width: isMobile ? "100%" : "auto",
             objectFit: "cover",
             objectPosition: "top",
+            borderRadius: isMobile ? "8px" : "0",
           }}
         />
       </div>
@@ -161,12 +167,14 @@ const HeroSlider = () => {
         onClick={nextSlide}
         style={{
           position: "absolute",
-          right: "20px",
+          right: "15px",
+          top: "50%",
+          transform: "translateY(-50%)",
           background: "rgba(255,255,255,0.2)",
           color: "#fff",
           border: "none",
-          width: "45px",
-          height: "45px",
+          width: "40px",
+          height: "40px",
           borderRadius: "50%",
           fontSize: "20px",
           cursor: "pointer",
@@ -180,16 +188,14 @@ const HeroSlider = () => {
       </button>
 
       {/* Dots */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: "8px",
-        }}
-      >
+      <div style={{
+        position: "absolute",
+        bottom: "15px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        display: "flex",
+        gap: "8px",
+      }}>
         {slides.map((_, i) => (
           <div
             key={i}
